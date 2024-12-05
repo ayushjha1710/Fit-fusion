@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Admission Form</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(to right, #ff4b5c, #ff758c);
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            color: #ff4b5c;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            font-size: 16px;
+        }
+        input:focus, select:focus {
+            border-color: #ff4b5c;
+            outline: none;
+            background-color: #fff;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #ff4b5c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #e43e4e;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Gym Admission Form</h2>
+        <form id="admissionForm">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="package">Membership Package</label>
+                <select id="package" name="package" required>
+                    <option value="basic">Basic Package</option>
+                    <option value="standard">Standard Package</option>
+                    <option value="premium">Premium Package</option>
+                </select>
+            </div>
+            <button type="button" onclick="generatePDF()">Submit</button>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        async function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const form = document.getElementById('admissionForm');
+            const formData = new FormData(form);
+
+            const data = {
+                name: formData.get('name'),
+                age: formData.get('age'),
+                phone: formData.get('phone'),
+                email: formData.get('email'),
+                package: formData.get('package')
+            };
+            if(document.getElementById('name')=='' || document.getElementById('age')=='' || document.getElementById('phone')=='' || document.getElementById('email')=='')
+                alert("All fields are required");
+            else{
+                alert("Form Submitted Successfully...");
+                const doc = new jsPDF();
+                doc.setFontSize(16);
+                doc.text('Gym Admission Receipt', 20, 20);
+                doc.setFontSize(12);
+                doc.text(`User Id: ${Math.floor(Math.random() * 1e10)}`,20, 40)
+                doc.text(`Full Name: ${data.name}`, 20, 50);
+                doc.text(`Age: ${data.age}`, 20, 60);
+                doc.text(`Phone Number: ${data.phone}`, 20, 70);
+                doc.text(`Email: ${data.email}`, 20, 80);
+                doc.text(`Membership Package: ${data.package}`, 20, 90);
+                doc.text(`${"Welcome to Fit Fusion. This is a computer generated receipt. Thank you!"}`, 20, 100);
+                // Name the PDF file with the user's name
+                const fileName = `${data.name.replace(/\s+/g, '_')}.pdf`;
+                doc.save(fileName);
+            }
+        }
+    </script>
+</body>
+</html>
